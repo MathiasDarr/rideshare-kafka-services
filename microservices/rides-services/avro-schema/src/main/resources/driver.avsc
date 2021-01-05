@@ -1,0 +1,20 @@
+[
+{"namespace": "org.mddarr.rides.event.dto",
+ "type": "enum",
+ "name": "AvroDriverState",
+ "symbols" : ["INACTIVE", "ASSIGNED_RIDE", "COMPLETING_RIDE", "ACTIVE"]
+},
+
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroDriver",
+ "fields": [
+     {"name": "driverid", "type": "string"},
+     {"name": "firstname",  "type": "string"},
+     {"name": "lastname",  "type": "string"},
+     {"name": "seats",  "type": "int"},
+     {"name": "state",  "type": "AvroDriverState"}
+ ]
+}
+
+]
