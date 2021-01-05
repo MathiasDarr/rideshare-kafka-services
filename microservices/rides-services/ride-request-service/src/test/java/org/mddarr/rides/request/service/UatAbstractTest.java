@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mddarr.rides.event.dto.AvroRideRequest;
-import org.mddarr.rides.event.dto.Event3;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;

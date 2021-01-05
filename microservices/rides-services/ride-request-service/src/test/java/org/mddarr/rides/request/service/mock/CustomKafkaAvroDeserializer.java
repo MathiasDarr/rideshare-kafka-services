@@ -8,7 +8,6 @@ import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import org.apache.avro.Schema;
 import org.mddarr.rides.event.dto.AvroRideRequest;
-import org.mddarr.rides.event.dto.Event3;
 
 
 /**
