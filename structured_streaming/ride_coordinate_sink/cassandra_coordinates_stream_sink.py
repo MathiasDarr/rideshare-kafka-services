@@ -37,7 +37,7 @@ def process_row(serialized_data):
      "type": "record",
      "name": "AvroRideCoordinate",
      "fields": [
-         {"name": "timestamp", "type": "long"},
+         {"name": "eventime", "type": "long"},
          {"name": "latitude", "type": "double"},
          {"name": "longitude", "type": "double"}
      ]
@@ -49,8 +49,7 @@ def process_row(serialized_data):
     deserialized_row = avroDeserializer(serialized_data, serializationContext)
     print("THE DESERIALIZED ROW LOOKS LIKE " + str(deserialized_row))
 
-    # return deserialized_row['value']
-    return [deserialized_row['latitude'], deserialized_row['longitude']]
+    return [deserialized_row['latitude'], deserialized_row['longitude'],float(deserialized_row['eventime'])]
 
 streamingDF = spark \
     .readStream \
@@ -61,10 +60,25 @@ streamingDF = spark \
     .load()
 
 deserialize_row_udf = udf(lambda x: process_row(x), ArrayType(DoubleType()))
-#
 deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', deserialize_row_udf("value"))
-deserialized_value_dataframe = deserialized_value_dataframe.select(['key','timestamp','deserialized_value'])
-deserialized_value_dataframe = deserialized_value_dataframe.withColumnRenamed('deserialized_value', 'value')
+
+deserialized_split_df = deserialized_value_dataframe.selectExpr("key","timestamp", "deserialized_value[0] as lat",
+                                                   "deserialized_value[1] as lng", "deserialized_value[2] as eventime")
+
+
+# deserialized_value_dataframe = deserialized_value_dataframe.select(['key','timestamp','time','deserialized_value',
+#                     deserialized_value_dataframe.coordinates[0], deserialized_value_dataframe.coordinates[1],deserialized_value_dataframe.coordinates[2] ])
+# split_df = deserialized_value_dataframe.select(de deserialized_value_dataframe.coordinates[0], deserialized_value_dataframe.coordinates[1],deserialized_value_dataframe.coordinates[2] )
+
+
+
+# deserialized_value_dataframe = deserialized_value_dataframe.withColumnRenamed('coordinates', 'value')
+
+# split_df = df.select(df.name, df.coordinates[0], df.coordinates[1])
+#
+#
+# split_df = df.selectExpr("name as name", "coordinates[0] as lat", "coordinates[1] as lng")
+
 
 
 def insert_coordinate_data_cassandra(row):
@@ -72,17 +86,17 @@ def insert_coordinate_data_cassandra(row):
     print("THE ROW LOOKS LIKE " + str(row))
 
     key = row['key'].decode('utf-8')
-    print("THE KEY LOOKS LIKE " + key)
-    # print("THE KEY LOOKS LIKE " + )
 
-    # insert_time_series_data_point = """INSERT INTO coordinates(rideid, time, latitude, longitude) VALUES(%s,%s,%s, %s);"""
-    # dbsession = initialize_cassanrdra_session()
-    #
-    # try:
-    #     dbsession.set_keyspace('ks1')
-    #     dbsession.execute(insert_time_series_data_point, [row['rideid'], row['time'], row['latitude'], row['longitude']])
-    # except Exception as e:
-    #     print(e)
+    insert_time_series_data_point = """INSERT INTO coordinates(rideid, time, latitude, longitude) VALUES(%s,%s,%s, %s);"""
+    try:
+        dbsession = initialize_cassanrdra_session()
+        dbsession.set_keyspace('ks1')
+        dbsession.execute(insert_time_series_data_point, [key, int(row['eventime']), row['lat'], row['lng']])
+        print("I EXECUTED THE QUERY")
+
+    except Exception as e:
+        print(e)
+        print("I DID NOT EXECUTE THE QUERY")
 
 
 def initialize_cassanrdra_session():
@@ -96,7 +110,7 @@ def initialize_cassanrdra_session():
         return None
 
 
-ds = deserialized_value_dataframe \
+ds = deserialized_split_df \
     .writeStream \
     .format("console") \
     .foreach(insert_coordinate_data_cassandra) \

@@ -40,7 +40,7 @@ public class EventProducer {
             AvroRideCoordinate avroRideCoordinate = AvroRideCoordinate.newBuilder()
                     .setLatitude(rideCoordinate.getLat())
                     .setLongitude(rideCoordinate.getLng())
-                    .setTimestamp(System.currentTimeMillis())
+                    .setEventime(System.currentTimeMillis())
                     .build();
             coordinatesKafkaTemplate.sendDefault(rideid, avroRideCoordinate);
             System.out.println("SENDING COORDINATES FOR RIDE " + rideid +  " at timestamp " + avroRideCoordinate.toString() + " ");

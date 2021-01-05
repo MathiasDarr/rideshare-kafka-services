@@ -2,7 +2,7 @@
  "type": "record",
  "name": "AvroRideCoordinate",
  "fields": [
-     {"name": "timestamp", "type": "long"},
+     {"name": "eventime", "type": "long"},
      {"name": "latitude", "type": "double"},
      {"name": "longitude", "type": "double"}
  ]
