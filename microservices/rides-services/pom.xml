@@ -21,7 +21,7 @@
         <module>stomp-sockets</module>
 <!--        <module>socket-service</module>-->
         <module>event-producer</module>
-<!--        <module>dispatch-service</module>-->
+        <module>dispatch-service</module>
 <!--        <module>drivers-service</module>-->
         <module>ride-request-service</module>
 <!--        <module>socket-service</module>-->

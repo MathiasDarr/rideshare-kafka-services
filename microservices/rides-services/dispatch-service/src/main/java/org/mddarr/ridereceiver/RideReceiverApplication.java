@@ -6,6 +6,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
 
 import org.mddarr.rides.event.dto.AvroDriver;
+import org.mddarr.rides.event.dto.AvroRide;
 import org.mddarr.rides.event.dto.AvroRideRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,22 +32,25 @@ public class RideReceiverApplication {
 
 
 	@Bean
-	public Function<KStream<String, AvroRideRequest>, KStream<String, AvroRideRequest>>  process() {
-		return (rideRequestStream) -> {
-			rideRequestStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
-			return rideRequestStream;
+	public Function<KStream<String, AvroRideRequest>, KStream<String, AvroRide>>  process_ride_requests() {
+		return (rideRequestKStream -> {
+			KStream<String, AvroRide> rideKStream = rideRequestKStream
+					.map((key,avroRideRequest)->new KeyValue<>(key, new AvroRide("ride1",avroRideRequest.getUserId(), "Bathsheba")));
+			return rideKStream;
+		});
 
-		};
 	}
 
-	@Bean
-	public Function<KStream<String, AvroDriver>, KStream<String, AvroDriver>>  process_drivers() {
-		return (avroDriverKStream) -> {
-			avroDriverKStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
-			return avroDriverKStream;
 
-		};
-	}
+
+//	@Bean
+//	public Function<KStream<String, AvroDriver>, KStream<String, AvroDriver>>  process_drivers() {
+//		return (avroDriverKStream) -> {
+//			avroDriverKStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
+//			return avroDriverKStream;
+//
+//		};
+//	}
 
 
 

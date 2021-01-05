@@ -4,7 +4,7 @@
       
       <v-row>
         <v-col cols="3" sm="3">
-          <v-btn color="primary" v-on:click="await_connection()">
+          <v-btn color="primary" v-on:click="riderequest_socket_connect()">
             Connect
           </v-btn>
         </v-col>
@@ -96,60 +96,48 @@ export default {
 
     ...mapActions(["addRequest"]),
 
+    // send() {
+    //   console.log("Send message:" + this.send_message);
+    //   if (this.stompClient && this.stompClient.connected) {
+    //     // const coordinates = {lat:12.1, lng:39.1}
+    //     // JSON.stringify(coordinates)
+    //     var request = {userid:"charles",riders:2,destination:"church" }
+        
+    //     // var request = {content:"hi", sender:"dfa"}
+        
+    //     var request = {userid:"charles",riders:2,destination:"church" }
+    //     var request_body = JSON.stringify(request)
+    //     this.stompClient.send("/app/rides/requests", request_body, {});
+    //   }
+    // },
+
     send() {
-      console.log("Send message:" + this.send_message);
       if (this.stompClient && this.stompClient.connected) {
         // const coordinates = {lat:12.1, lng:39.1}
         // JSON.stringify(coordinates)
-        var request = {userid:"charles",riders:2,destination:"church" }
-        
+        var request = {name:"charles"} 
+        console.log("WHATADF")
         // var request = {content:"hi", sender:"dfa"}
-        
-        var request = {userid:"charles",riders:2,destination:"church" }
         var request_body = JSON.stringify(request)
-        this.stompClient.send("/app/rides/requests", request_body, {});
+        this.stompClient.send("/app/hello", request_body, {});
+      }
+      else{
+        console.log("NOT EVEN CONNECTED")
       }
     },
 
 
-    async establish_connection(){
-      try{
-          var url ='http://localhost:8093/rides/requests'
-          const response = await axios.put(url, {userid:'jerryjones', riders:2, destination:"San Juan", city:"San Fransansico"})                        
-          var requestid = response.data
-          console.log(response.data)                
-          // this.setRequestID(requestid)
-          return true;
-        }catch(err){
-          console.log(err)
-          return false;
-        }
-      },
-
-    async await_connection(){
-        if(await this.establish_connection()){
-          this.ride_matching_socket_connect()  
-        }
-        else{
-          console.log("UNABLE TO PLACE RIDE REQUEST")
-        }
-    },
-
-
-
-
-    ride_matching_socket_connect(){
-      this.socket = new SockJS("http://localhost:8094/ride-request-websocket");
+    greetings_socket_connect(){
+      this.socket = new SockJS("http://localhost:8094/gs-guide-websocket");
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect(
         {},
         frame => {
           this.connected = true;
           console.log(frame);
-          this.stompClient.subscribe("/topic/rides/requests/alert", tick => {
+          this.stompClient.subscribe("/topic/greetings", tick => {
           var request = JSON.parse(tick.body)
-          console.log(request);
-          console.log(request.userid)
+
             this.received_ride_requests.push(JSON.parse(tick.body));
           });
         },
@@ -159,6 +147,81 @@ export default {
         }
       );
     },
+
+
+    riderequest_socket_connect(){
+      this.socket = new SockJS("http://localhost:8094/ride-request-websocket");
+      this.stompClient = Stomp.over(this.socket);
+      this.stompClient.connect(
+        {},
+        frame => {
+          this.connected = true;
+          console.log(frame);
+          this.stompClient.subscribe("/topic/rides/requests/alert", tick => {
+
+          console.log(tick.body)
+          // var request = JSON.parse(tick.body)
+
+          //   this.received_ride_requests.push(JSON.parse(tick.body));
+          });
+        },
+        error => {
+          console.log(error);
+          this.connected = false;
+        }
+      );
+    },
+
+
+
+
+    // async establish_connection(){
+    //   try{
+    //       var url ='http://localhost:8093/rides/requests'
+    //       const response = await axios.put(url, {userid:'jerryjones', riders:2, destination:"San Juan", city:"San Fransansico"})                        
+    //       var requestid = response.data
+    //       console.log(response.data)                
+    //       // this.setRequestID(requestid)
+    //       return true;
+    //     }catch(err){
+    //       console.log(err)
+    //       return false;
+    //     }
+    //   },
+
+    // async await_connection(){
+    //     if(await this.establish_connection()){
+    //       this.ride_matching_socket_connect()  
+    //     }
+    //     else{
+    //       console.log("UNABLE TO PLACE RIDE REQUEST")
+    //     }
+    // },
+
+
+
+
+    // ride_matching_socket_connect(){
+    //   this.socket = new SockJS("http://localhost:8094/ride-request-websocket");
+    //   this.stompClient = Stomp.over(this.socket);
+    //   this.stompClient.connect(
+    //     {},
+    //     frame => {
+    //       this.connected = true;
+    //       console.log(frame);
+    //       this.stompClient.subscribe("/topic/rides/requests/alert", tick => {
+    //       var request = JSON.parse(tick.body)
+    //       console.log(request);
+    //       console.log(request.userid)
+    //         this.received_ride_requests.push(JSON.parse(tick.body));
+    //       });
+    //     },
+    //     error => {
+    //       console.log(error);
+    //       this.connected = false;
+    //     }
+    //   );
+    // },
 
 
     disconnect() {
