@@ -4,7 +4,7 @@
       
       <v-row>
         <v-col cols="3" sm="3">
-          <v-btn color="primary" v-on:click="riderequest_socket_connect()">
+          <v-btn color="primary" v-on:click="await_connection()">
             Connect
           </v-btn>
         </v-col>
@@ -173,30 +173,28 @@ export default {
     },
 
 
+    async establish_connection(){
+      try{
+          var url ='http://localhost:8093/rides/requests'
+          const response = await axios.put(url, {userid:'jerryjones', riders:2, destination:"San Juan", city:"San Fransansico"})                        
+          var requestid = response.data
+          console.log(response.data)                
+          // this.setRequestID(requestid)
+          return true;
+        }catch(err){
+          console.log(err)
+          return false;
+        }
+      },
 
-
-    // async establish_connection(){
-    //   try{
-    //       var url ='http://localhost:8093/rides/requests'
-    //       const response = await axios.put(url, {userid:'jerryjones', riders:2, destination:"San Juan", city:"San Fransansico"})                        
-    //       var requestid = response.data
-    //       console.log(response.data)                
-    //       // this.setRequestID(requestid)
-    //       return true;
-    //     }catch(err){
-    //       console.log(err)
-    //       return false;
-    //     }
-    //   },
-
-    // async await_connection(){
-    //     if(await this.establish_connection()){
-    //       this.ride_matching_socket_connect()  
-    //     }
-    //     else{
-    //       console.log("UNABLE TO PLACE RIDE REQUEST")
-    //     }
-    // },
+    async await_connection(){
+        if(await this.establish_connection()){
+          this.riderequest_socket_connect()  
+        }
+        else{
+          console.log("UNABLE TO PLACE RIDE REQUEST")
+        }
+    },
 
 
 
