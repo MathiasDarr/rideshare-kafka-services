@@ -1,7 +1,3 @@
-"""
-This spark job reads a stream from a kafka topic where the values are serialized using avro.  Using confluent_kafka python library to deserialize avro data using the schema registry (spark-avro does not support this).  Data is written to a kafka-sink.
-
-"""
 import findspark
 findspark.init()
 import pyspark as ps
@@ -57,7 +53,7 @@ streamingDF = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "localhost:9092") \
-    .option("subscribe", "time-series") \
+    .option("subscribe", "coordinates") \
     .option('includeTimestamp', 'true') \
     .load()
 

@@ -21,13 +21,6 @@ def populate_coordinates_table():
 
     insert_trip_data_point = """INSERT INTO coordinates(rideid, time, latitude, longitude) VALUES(%s,%s,%s,%s);"""
 
-    TRIP_DATA_CSV_FILE = 'data/ride_coordinates/coordinates.csv'
-
-    with open(TRIP_DATA_CSV_FILE, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            dbsession.execute(insert_trip_data_point, [ row['rideid'], row['time'], float(row['latitude']),float(row['longitude'])])
-
 
 if __name__ == '__main__':
     dbsession = createCassandraConnection()
@@ -38,4 +31,4 @@ if __name__ == '__main__':
         print(e)
 
     populate_coordinates_table()
-    print("CASSANDRA DATABASE SEEDED")
+    print("CASSANDRA COORDINATE TABLE CREATED")

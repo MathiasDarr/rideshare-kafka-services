@@ -1,10 +1,7 @@
 package org.mddarr.producer;
 
 import org.mddarr.producer.kafka.generictemplate.KafkaGenericTemplate;
-import org.mddarr.producer.models.Driver;
-import org.mddarr.producer.models.DrivingSession;
-import org.mddarr.producer.models.RideRequestSession;
-import org.mddarr.producer.models.User;
+import org.mddarr.producer.models.*;
 import org.mddarr.producer.repositories.DriverRepository;
 import org.mddarr.producer.repositories.UserRepository;
 
@@ -18,12 +15,35 @@ import java.util.*;
 public class EventProducer {
 
     public static void main(String[] args) throws Exception {
+        populateRideCoordinates();
 //        populateSingleRide();
         // populateDrivers();
-        populateSingleRideRequests();
 //        populateSingleDriver();
 
     }
+
+    public static void populateRideCoordinates(){
+
+        Location location = new Location("Ballard", 12.0, -47.2);
+        Location destination = new Location("Fremont", 12.1, 55.2);
+        String rideid = "ride1";
+
+        List<AvroRideCoordinate> rideCoordinates =  CoordinatesProducer.generateCoordinateArray(rideid, location, destination);
+
+        KafkaGenericTemplate<AvroRideCoordinate> kafkaGenericTemplate = new KafkaGenericTemplate<>();
+        KafkaTemplate<String, AvroRideCoordinate> coordinatesKafkaTemplate = kafkaGenericTemplate.getKafkaTemplate();
+
+        coordinatesKafkaTemplate.setDefaultTopic(Constants.COORDINATES_TOPIC);
+
+        for(AvroRideCoordinate avroRideCoordinate: rideCoordinates){
+            coordinatesKafkaTemplate.sendDefault(avroRideCoordinate);
+            System.out.println("SENDING COORDINATES FOR RIDE " + rideid +  " at timestamp " + avroRideCoordinate.toString() + " ");
+        }
+
+
+    }
+
+
 
     public static void populateSingleRideRequests() throws Exception {
 
@@ -51,10 +71,8 @@ public class EventProducer {
     public static void populateSingleDriver(){
         KafkaGenericTemplate<AvroDriver> kafkaGenericTemplate = new KafkaGenericTemplate<>();
         KafkaTemplate<String, AvroDriver> driverKafkaTemplate = kafkaGenericTemplate.getKafkaTemplate();
-
         driverKafkaTemplate.setDefaultTopic(Constants.DRIVERS_TOPIC);
         String city = "Seattle";
-
         AvroDriver avroDriver = AvroDriver.newBuilder()
                 .setDriverid("driver1")
                 .setFirstname("Erik")
@@ -66,14 +84,11 @@ public class EventProducer {
         driverKafkaTemplate.sendDefault(city, avroDriver);
     }
 
-
     public static void populateAllDrivers() throws Exception{
-
         KafkaGenericTemplate<AvroDriver> kafkaGenericTemplate = new KafkaGenericTemplate<>();
         KafkaTemplate<String, AvroDriver> driverKafkaTemplate = kafkaGenericTemplate.getKafkaTemplate();
         driverKafkaTemplate.setDefaultTopic(Constants.DRIVERS_TOPIC);
         List<Driver> drivers = DriverRepository.getDriversFromDB();
-
         drivers.forEach(driver -> {
             System.out.println("Writing driver for '" + driver.getFirst_name() + "' to input topic " +
                     Constants.DRIVERS_TOPIC);
