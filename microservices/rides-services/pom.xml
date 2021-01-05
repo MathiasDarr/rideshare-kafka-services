@@ -18,7 +18,7 @@
     
     <modules>
         <module>socket-service</module>
-<!--        <module>stomp-sockets</module>-->
+        <module>stomp-sockets</module>
 <!--        <module>socket-service</module>-->
         <module>event-producer</module>
 <!--        <module>dispatch-service</module>-->

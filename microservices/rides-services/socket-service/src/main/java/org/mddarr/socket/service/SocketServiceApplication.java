@@ -3,7 +3,8 @@ package org.mddarr.socket.service;
 import org.apache.kafka.streams.kstream.KStream;
 import org.mddarr.rides.event.dto.AvroRide;
 import org.mddarr.rides.event.dto.AvroRideRequest;
-import org.mddarr.socket.service.model.CoordinatesResponse;
+
+import org.mddarr.socket.service.model.Greeting;
 import org.mddarr.socket.service.model.Ride;
 import org.mddarr.socket.service.model.requests.RideRequest;
 import org.mddarr.socket.service.model.responses.RideRequestResponse;
@@ -39,23 +40,30 @@ public class SocketServiceApplication {
 //	}
 //
 
-	@Bean
-	public Consumer<KStream<String, AvroRide>> process_rides() {
-		return (rideRequestStream) -> {
-			rideRequestStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
-			Ride ride = new Ride("rideid1", "Charles Driver", "Eric User");
-			template.convertAndSend("/topic/rides", ride);
-		};
-	}
+//	@Bean
+//	public Consumer<KStream<String, AvroRide>> process_rides() {
+//		return (rideRequestStream) -> {
+//			rideRequestStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
+//			Ride ride = new Ride("rideid1", "Charles Driver", "Eric User");
+//			template.convertAndSend("/topic/rides", ride);
+//		};
+//	}
 
 	@Bean
 	public Consumer<KStream<String, AvroRideRequest>> process_ride_requests() {
 		return (rideRequestStream) -> {
-			rideRequestStream.foreach((key, value) -> {
-				System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value);
-				System.out.println("GETADF");
+			rideRequestStream.foreach((key, avroRideRequest) -> {
+//				System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value);
+//				System.out.println("GETADF");
 				RideRequestResponse rideRequestResponse = new RideRequestResponse();
-				template.convertAndSend("/topic/rides/requests/alert", rideRequestResponse);
+				rideRequestResponse.setUserid(avroRideRequest.getUserId());
+				rideRequestResponse.setRideid(avroRideRequest.getRequestId());
+				rideRequestResponse.setRiders(avroRideRequest.getRiders());
+				rideRequestResponse.setDestination(avroRideRequest.getDestination());
+
+
+				//				Greeting greeting = new Greeting("Henery My Body");
+				template.convertAndSend("/topic/rides/requests/alert", rideRequestResponse );
 			});
 
 		};

@@ -2,10 +2,7 @@ server.port: 8094
 
 spring.cloud.stream:
   function:
-    definition: process_rides;process_ride_requests;
-
-spring.cloud.stream.bindings.process_rides-in-0:
-  destination: rides
+    definition: process_ride_requests;
 
 spring.cloud.stream.bindings.process_ride_requests-in-0:
   destination: ride-requests
