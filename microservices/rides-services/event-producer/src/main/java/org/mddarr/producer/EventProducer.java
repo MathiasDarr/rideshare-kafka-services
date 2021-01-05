@@ -22,31 +22,33 @@ public class EventProducer {
 
     }
 
-    public static void populateRideCoordinates(){
+    public static void populateRideCoordinates() throws InterruptedException {
 
         Location location = new Location("Ballard", 12.0, -47.2);
         Location destination = new Location("Fremont", 12.1, 55.2);
-        String rideid = "ride1";
+        String rideid = "ride3";
+        int npoints = 100000;
 
-        List<AvroRideCoordinate> rideCoordinates =  CoordinatesProducer.generateCoordinateArray(rideid, location, destination);
+        List<RideCoordinate> rideCoordinates =  CoordinatesProducer.generateCoordinateArray(rideid, location, destination, npoints);
 
         KafkaGenericTemplate<AvroRideCoordinate> kafkaGenericTemplate = new KafkaGenericTemplate<>();
         KafkaTemplate<String, AvroRideCoordinate> coordinatesKafkaTemplate = kafkaGenericTemplate.getKafkaTemplate();
 
         coordinatesKafkaTemplate.setDefaultTopic(Constants.COORDINATES_TOPIC);
 
-        for(AvroRideCoordinate avroRideCoordinate: rideCoordinates){
-            coordinatesKafkaTemplate.sendDefault(avroRideCoordinate);
+        for(RideCoordinate rideCoordinate: rideCoordinates){
+            AvroRideCoordinate avroRideCoordinate = AvroRideCoordinate.newBuilder()
+                    .setLatitude(rideCoordinate.getLat())
+                    .setLongitude(rideCoordinate.getLng())
+                    .setTimestamp(System.currentTimeMillis())
+                    .build();
+            coordinatesKafkaTemplate.sendDefault(rideid, avroRideCoordinate);
             System.out.println("SENDING COORDINATES FOR RIDE " + rideid +  " at timestamp " + avroRideCoordinate.toString() + " ");
+            Thread.sleep(2000);
         }
-
-
     }
 
-
-
     public static void populateSingleRideRequests() throws Exception {
-
         KafkaGenericTemplate<AvroRideRequest> kafkaGenericTemplate = new KafkaGenericTemplate<>();
         KafkaTemplate<String, AvroRideRequest> rideRequestKafkaTemplate = kafkaGenericTemplate.getKafkaTemplate();
         rideRequestKafkaTemplate.setDefaultTopic(Constants.RIDE_REQUEST_TOPIC);

@@ -12,7 +12,7 @@ from utilities.cassandra_utilities import createCassandraConnection, createKeySp
 def populate_coordinates_table():
     create_ride_coordiantes_table = """CREATE TABLE IF NOT EXISTS coordinates(
         rideid text, 
-        time timestamp,
+        time bigint,
         latitude float,
         longitude float,
         PRIMARY KEY(rideid, time));

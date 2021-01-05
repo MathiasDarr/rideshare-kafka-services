@@ -5,7 +5,7 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroDeserializer
 from confluent_kafka.serialization import SerializationContext
 from pyspark.sql.functions import udf, array
-from pyspark.sql.types import DoubleType, StringType
+from pyspark.sql.types import DoubleType, StringType, ArrayType
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 
@@ -37,17 +37,20 @@ def process_row(serialized_data):
      "type": "record",
      "name": "AvroRideCoordinate",
      "fields": [
-         {"name": "dataID", "type": "string"},
-         {"name": "value", "type": "double"}
+         {"name": "timestamp", "type": "long"},
+         {"name": "latitude", "type": "double"},
+         {"name": "longitude", "type": "double"}
      ]
     }
     '''
     schemaRegistryClient = SchemaRegistryClient({"url": "http://localhost:8081"})
     avroDeserializer = AvroDeserializer(schema, schemaRegistryClient)
-    serializationContext = SerializationContext("time-series", schema)
+    serializationContext = SerializationContext("coordinates", schema)
     deserialized_row = avroDeserializer(serialized_data, serializationContext)
-    return deserialized_row['value']
+    print("THE DESERIALIZED ROW LOOKS LIKE " + str(deserialized_row))
 
+    # return deserialized_row['value']
+    return [deserialized_row['latitude'], deserialized_row['longitude']]
 
 streamingDF = spark \
     .readStream \
@@ -57,24 +60,29 @@ streamingDF = spark \
     .option('includeTimestamp', 'true') \
     .load()
 
-deserialize_row_udf = udf(lambda x: process_row(x), DoubleType())
-
+deserialize_row_udf = udf(lambda x: process_row(x), ArrayType(DoubleType()))
+#
 deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', deserialize_row_udf("value"))
 deserialized_value_dataframe = deserialized_value_dataframe.select(['key','timestamp','deserialized_value'])
-
-deserialized_value_dataframe.drop('value')
 deserialized_value_dataframe = deserialized_value_dataframe.withColumnRenamed('deserialized_value', 'value')
 
 
-def print_row(row):
-    insert_time_series_data_point = """INSERT INTO time_series(processID, time, value) VALUES(%s,%s,%s);"""
-    dbsession = initialize_cassanrdra_session()
+def insert_coordinate_data_cassandra(row):
 
-    try:
-        dbsession.set_keyspace('ks1')
-        dbsession.execute(insert_time_series_data_point, [row['key'], row['timestamp'], row['value']])
-    except Exception as e:
-        print(e)
+    print("THE ROW LOOKS LIKE " + str(row))
+
+    key = row['key'].decode('utf-8')
+    print("THE KEY LOOKS LIKE " + key)
+    # print("THE KEY LOOKS LIKE " + )
+
+    # insert_time_series_data_point = """INSERT INTO coordinates(rideid, time, latitude, longitude) VALUES(%s,%s,%s, %s);"""
+    # dbsession = initialize_cassanrdra_session()
+    #
+    # try:
+    #     dbsession.set_keyspace('ks1')
+    #     dbsession.execute(insert_time_series_data_point, [row['rideid'], row['time'], row['latitude'], row['longitude']])
+    # except Exception as e:
+    #     print(e)
 
 
 def initialize_cassanrdra_session():
@@ -89,10 +97,17 @@ def initialize_cassanrdra_session():
 
 
 ds = deserialized_value_dataframe \
-    .selectExpr("value", "CAST(key AS STRING)", "timestamp") \
     .writeStream \
-    .foreach(print_row) \
+    .format("console") \
+    .foreach(insert_coordinate_data_cassandra) \
     .trigger(processingTime="5 seconds") \
     .start()
+
+# ds = deserialized_value_dataframe \
+#     .selectExpr("value", "CAST(key AS STRING)", "timestamp") \
+#     .writeStream \
+#     .foreach(process_row) \
+#     .trigger(processingTime="5 seconds") \
+#     .start()
 
 spark.streams.awaitAnyTermination()

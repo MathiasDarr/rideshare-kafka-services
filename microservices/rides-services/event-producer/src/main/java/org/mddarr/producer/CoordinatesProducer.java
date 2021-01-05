@@ -17,16 +17,13 @@ public class CoordinatesProducer {
         return d;
     }
 
-    public static List<AvroRideCoordinate>  generateCoordinateArray(String rideid, Location location, Location destination){
-
-        int npoints = 120;
-
+    public static List<RideCoordinate>  generateCoordinateArray(String rideid, Location location, Location destination, int npoints){
         double[] latitudes = linspace(location.getLat(), location.getLng(), npoints);
         double[] longitudes = linspace(location.getLng(), destination.getLng(), npoints);
-        List<AvroRideCoordinate> rideCoordinates = new ArrayList<>();
+        List<RideCoordinate> rideCoordinates = new ArrayList<>();
 
         for(int i =0; i< latitudes.length; i++){
-            rideCoordinates.add(new AvroRideCoordinate((long) i, latitudes[i], longitudes[i]));
+            rideCoordinates.add(new RideCoordinate(latitudes[i], longitudes[i]));
         }
         return rideCoordinates;
     }
