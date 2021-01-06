@@ -19,7 +19,7 @@
 		<java.version>11</java.version>
 	</properties>
 	<modules>
-		<module>rides-services</module>
+		<module>transactions-services</module>
 
 
 		<!--		<module>driver-service</module>-->
