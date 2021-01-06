@@ -25,7 +25,6 @@ public class OrderRequestController {
     public String sendMessage(@RequestBody RideRequest rideRequest) {
         unbounded.offer(rideRequest);
         return "ride request has been posted.. ";
-
     }
 
 }

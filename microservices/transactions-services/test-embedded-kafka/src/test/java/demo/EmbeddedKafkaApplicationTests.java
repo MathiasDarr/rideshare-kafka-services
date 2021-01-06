@@ -42,10 +42,7 @@ import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -79,34 +76,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @EmbeddedKafka
 @ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EmbeddedKafkaApplicationTests {
 
 	private static final String INPUT_TOPIC = "testEmbeddedIn";
 
-//	@RegisterExtension
-//	public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, INPUT_TOPIC);
-
 	@Autowired
 	private EmbeddedKafkaBroker embeddedKafkaBroker;
 
-	@Test
-	public void testWhatever(){
+	BlockingQueue<ConsumerRecord<String, String>> records;
+
+	KafkaMessageListenerContainer<String, String> container;
+
+
+	@BeforeAll
+	void setup(){
 		Map<String, Object> configs = new HashMap<>(KafkaTestUtils.consumerProps("consumer", "false", embeddedKafkaBroker));
-//		DefaultKafkaConsumerFactory<Integer, String> cf =
-//				new DefaultKafkaConsumerFactory<Integer, String>(consumerProps);
-//		ContainerProperties containerProperties = new ContainerProperties(INPUT_TOPIC);
-//		KafkaMessageListenerContainer<Integer, String> container =
-//				new KafkaMessageListenerContainer<>(cf, containerProperties);
-//		final BlockingQueue<ConsumerRecord<Integer, String>> records = new LinkedBlockingQueue<>();
-//		container.setupMessageListener(new MessageListener<Integer, String>() {
-//
-//			@Override
-//			public void onMessage(ConsumerRecord<Integer, String> record) {
-//				System.out.println(record);
-//				records.add(record);
-//			}
-//
-//		});
+		DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new StringDeserializer());
+		ContainerProperties containerProperties = new ContainerProperties(INPUT_TOPIC);
+		container = new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
+		records = new LinkedBlockingQueue<>();
+		container.setupMessageListener((MessageListener<String, String>) records::add);
+		container.start();
+		ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic());
+	}
+
+
+	@Test
+	public void testWhatever() throws InterruptedException {
+		Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
+		Producer<String, String> producer = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer()).createProducer();
+
+		// Act
+		producer.send(new ProducerRecord<>(INPUT_TOPIC, "my-aggregate-id", "{\"event\":\"Test Event\"}"));
+		producer.flush();
+
+		// Assert
+		ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
+		assertThat(singleRecord).isNotNull();
+		assertThat(singleRecord.key()).isEqualTo("my-aggregate-id");
+		assertThat(singleRecord.value()).isEqualTo("{\"event\":\"Test Event\"}");
 	}
 
 }
