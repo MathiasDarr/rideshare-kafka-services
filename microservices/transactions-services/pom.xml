@@ -15,6 +15,7 @@
     <modules>
         <module>avro-schema</module>
         <module>ui-request-service</module>
+        <module>test-embedded-kafka</module>
     </modules>
 
 </project>
