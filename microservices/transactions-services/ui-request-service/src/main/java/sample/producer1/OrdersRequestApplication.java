@@ -31,14 +31,25 @@ public class OrdersRequestApplication {
 
 	@Bean
 	public Supplier<AvroRideRequest> orders_supplier() {
-		return () -> { AvroOrder rideRequest = unbounded.poll();
+		return () -> {
+			try {
+				System.out.println("dfdfdfSDFDF");
+				AvroOrder rideRequest = unbounded.take();
 				AvroRideRequest avroRideRequest = AvroRideRequest.newBuilder()
 						.setRequestId("dfdf")
-						.setDestination("dfdf")
+						.setDestination(rideRequest.getCustomerId())
 						.setUserId("dfdf")
 						.setRiders(2)
 						.build();
 				return avroRideRequest;
+			} catch (InterruptedException e) {
+				System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+
+				e.printStackTrace();
+				return null;
+			}
+
+
 		};
 	}
 

@@ -2,10 +2,12 @@ package sample.producer1.models;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class RideRequest {
     private String userid;
     private Integer riders;
