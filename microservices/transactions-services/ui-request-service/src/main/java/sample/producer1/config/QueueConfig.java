@@ -5,6 +5,7 @@ import org.mddarr.orders.event.dto.FirstOrder;
 import org.mddarr.rides.event.dto.AvroRideRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import sample.producer1.models.RideRequest;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class QueueConfig {
 
     @Bean
-    BlockingQueue<AvroOrder> getBlockingQueueunbounded() {
+    BlockingQueue<RideRequest> getBlockingQueueunbounded() {
       return  new LinkedBlockingQueue<>();
     }
 

@@ -1,5 +1,6 @@
 package sample.producer1;
 
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -22,7 +23,7 @@ import sample.producer1.models.RideRequest;
 public class OrdersRequestApplication {
 
 	@Autowired
-	BlockingQueue<AvroOrder> unbounded;
+	BlockingQueue<RideRequest> unbounded;
 
 	public static void main(String[] args) {
 		SpringApplication.run(OrdersRequestApplication.class, args);
@@ -33,17 +34,22 @@ public class OrdersRequestApplication {
 	public Supplier<AvroRideRequest> orders_supplier() {
 		return () -> {
 			try {
-				System.out.println("dfdfdfSDFDF");
-				AvroOrder rideRequest = unbounded.take();
+
+				RideRequest rideRequest = unbounded.take();
+
+				System.out.println("THE RIDE REUQEST " + rideRequest.getDestination());
+				System.out.println("THE RIDE REUQEST " + rideRequest.getRiders());
+				System.out.println("THE RIDE REUQEST " + rideRequest.getCity());
+				System.out.println("THE RIDE REUQEST " + rideRequest.getUserid());
+
 				AvroRideRequest avroRideRequest = AvroRideRequest.newBuilder()
-						.setRequestId("dfdf")
-						.setDestination(rideRequest.getCustomerId())
-						.setUserId("dfdf")
-						.setRiders(2)
+						.setRequestId(UUID.randomUUID().toString())
+						.setDestination(rideRequest.getDestination())
+						.setUserId(rideRequest.getUserid())
+						.setRiders(rideRequest.getRiders())
 						.build();
 				return avroRideRequest;
 			} catch (InterruptedException e) {
-				System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
 				e.printStackTrace();
 				return null;
