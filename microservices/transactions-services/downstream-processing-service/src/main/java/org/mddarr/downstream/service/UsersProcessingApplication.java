@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 @SpringBootApplication
 public class UsersProcessingApplication {
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(UsersProcessingApplication.class, args);
 	}

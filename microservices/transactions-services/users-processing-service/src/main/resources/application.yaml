@@ -1,14 +1,6 @@
 server.port: 8090
 
-spring.cloud.stream:
-  kafka:
-    binder:
-      transaction:
-        transaction-id-prefix: user-
-        producer:
-          configuration:
-            retries: 1
-            acks: all
+
   function:
     definition: process_ride_requests;
 
@@ -18,8 +10,15 @@ spring.cloud.stream.bindings.process_ride_requests-out-0:
   destination: users-out
 
 
-
-
+spring.cloud.stream:
+  kafka:
+    binder:
+      transaction:
+        transaction-id-prefix: user-
+        producer:
+          configuration:
+            retries: 1
+            acks: all
 
 
 spring.cloud.stream.kafka.streams.binder:
