@@ -10,8 +10,6 @@ spring.cloud.stream.bindings.process_users_requests-in-0:
 spring.cloud.stream.bindings.process_users_requests-out-0:
   destination: users-actions
 
-
-
 spring.cloud.stream.kafka.streams.binder:
   brokers: localhost:9092
   configuration:

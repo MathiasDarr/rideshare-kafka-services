@@ -1,4 +1,4 @@
-package org.mddarr.processingservice.models;
+package org.mddarr.ridereceiver.models;
 
 
 import lombok.AllArgsConstructor;

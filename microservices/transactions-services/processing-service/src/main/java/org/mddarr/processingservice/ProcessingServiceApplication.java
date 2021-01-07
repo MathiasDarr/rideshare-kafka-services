@@ -33,19 +33,24 @@ public class ProcessingServiceApplication {
 	}
 
 
-	@Bean
-	public Function<KStream<String, AvroUserEvent>, KStream<String, AvroUserEvent>> process_users_requests() {
-		return (userKStream -> userKStream);
-
-	}
+//	@Bean
+//	public Function<KStream<String, AvroUserEvent>, KStream<String, AvroUserEvent>> process_users_requests() {
+//		return (userKStream -> userKStream);
+//
+//	}
 
 	@Transactional
 	@Bean
-	public Function<AvroUserEvent, AvroUserEvent> process() {
+	public Function<AvroUserEvent, AvroUserEvent> process_users_requests() {
 		return avroUser -> {
 			System.out.println("Received event = " +  avroUser);
 			UserEntity user = new UserEntity();
 			user.setFirst_name(avroUser.getFirstname());
+			user.setLast_name(avroUser.getLastname());
+			user.setPassword("1!ZionTF");
+			user.setPhone_number(avroUser.getPhonenumber());
+			user.setCity(avroUser.getCity());
+			user.setEmail(avroUser.getEmail());
 
 			if (shouldFail.get()) {
 				shouldFail.set(false);
@@ -65,6 +70,40 @@ public class ProcessingServiceApplication {
 			return avroUser;
 		};
 	}
+
+
+
+//	@Transactional
+//	@Bean
+//	public Function<AvroUserEvent, AvroUserEvent> process() {
+//		return avroUser -> {
+//			System.out.println("Received event = " +  avroUser);
+//			UserEntity user = new UserEntity();
+//			user.setFirst_name(avroUser.getFirstname());
+//			user.setLast_name(avroUser.getLastname());
+//			user.setPassword("1!ZionTF");
+//			user.setPhone_number(avroUser.getPhonenumber());
+//			user.setCity(avroUser.getCity());
+//			user.setEmail(avroUser.getEmail());
+//
+//			if (shouldFail.get()) {
+//				shouldFail.set(false);
+//				throw new RuntimeException("Simulated network error");
+//			} else {
+//				//We fail every other request as a test
+//				shouldFail.set(true);
+//			}
+//			System.out.println("Saving person=" +  user);
+//
+//			UserEntity savedPerson = userRepository.save(user);
+//
+//			UserEntity event = new UserEntity();
+//			event.setFirst_name(savedPerson.getFirst_name());
+////			event.setType("PersonSaved");
+////			logger.info("Sent event={}", event);
+//			return avroUser;
+//		};
+//	}
 
 	@Bean
 	public ListenerContainerCustomizer<AbstractMessageListenerContainer<byte[], byte[]>> customizer() {

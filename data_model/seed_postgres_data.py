@@ -6,7 +6,7 @@ import psycopg2
 import csv
 
 
-def populate_users_table():
+def create_users_table():
     create_users_table = """
             CREATE TABLE users (
                     userid VARCHAR(50) PRIMARY KEY,
@@ -20,6 +20,9 @@ def populate_users_table():
     """
     cur.execute(create_users_table)
     conn.commit()
+
+
+def populate_users_table():
     USERS_CSV_FILE = 'data/users/users.csv'
     insert_into_users_table = """INSERT INTO users(userid, first_name, last_name, email, password, phone_number, city) VALUES(%s,%s,%s, %s, %s, %s, %s);"""
     with open(USERS_CSV_FILE, newline='') as csvfile:
@@ -150,9 +153,11 @@ if __name__ =='__main__':
     conn = psycopg2.connect(host="localhost", port="5432", user="postgres", password="postgres", database="postgresdb")
     cur = conn.cursor()
 
-    populate_drivers_table()
-    populate_users_table()
-    populate_ride_requests_table()
+    create_users_table()
+
+    # populate_drivers_table()
+    # populate_users_table()
+    # populate_ride_requests_table()
     # populate_rides_table()
     # create_sessions_table()
     print("THE POSTGRES DATABASE HAS BEEN SEEDED.")
