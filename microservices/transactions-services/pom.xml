@@ -14,9 +14,13 @@
 
     <modules>
         <module>avro-schema</module>
+<!--        <module>ride-request-service</module>-->
+<!--        <module>users-processing-service</module>-->
         <module>ride-request-service</module>
+        <module>downstream-processing-service</module>
         <module>users-processing-service</module>
-<!--        <module>processing-service</module>-->
+
+        <!--        <module>processing-service</module>-->
 <!--        <module>dispatch-service</module>-->
 
 <!--        <module>ui-request-service</module>-->

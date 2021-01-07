@@ -14,7 +14,7 @@ def create_users_table():
                     last_name VARCHAR(50),
                     city VARCHAR(50),
                     phone_number VARCHAR(50),
-                    email VARCHAR(50),
+                    email VARCHAR(50) UNIQUE,
                     password VARCHAR(50)
             );
     """
@@ -130,7 +130,7 @@ def populate_rides_table():
 
 
 def populate_ride_requests_table():
-    create_users_table = """
+    create_ride_requests_table = """
             CREATE TABLE ride_requests (
                     request_id VARCHAR(50) PRIMARY KEY,
                     userid VARCHAR(50) REFERENCES users(userid),
@@ -138,7 +138,7 @@ def populate_ride_requests_table():
                     riders INTEGER
             );
     """
-    cur.execute(create_users_table)
+    cur.execute(create_ride_requests_table)
     conn.commit()
     #USERS_CSV_FILE = 'data/ride_requests/ride_requests.csv'
     #insert_into_users_table = """INSERT INTO ride_requests(request_id, userid, request_time, riders) VALUES(%s,%s,%s, %s);"""

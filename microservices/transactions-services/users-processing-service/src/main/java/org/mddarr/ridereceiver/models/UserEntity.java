@@ -26,7 +26,7 @@ public class UserEntity {
     @Column
     private String phone_number;
 
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String password;

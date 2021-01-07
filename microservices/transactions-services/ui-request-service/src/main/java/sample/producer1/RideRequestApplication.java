@@ -14,6 +14,9 @@ import org.springframework.cloud.schema.registry.client.EnableSchemaRegistryClie
 import org.springframework.cloud.schema.registry.client.SchemaRegistryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.util.IntegrationReactiveUtils;
+import org.springframework.messaging.Message;
+import reactor.core.publisher.Flux;
 import sample.producer1.models.RideRequest;
 
 @SpringBootApplication
@@ -27,35 +30,40 @@ public class RideRequestApplication {
 		SpringApplication.run(RideRequestApplication.class, args);
 	}
 
-
-	@Bean
-	public Supplier<AvroRideRequest> orders_supplier() {
-		return () -> {
-			try {
-
-				RideRequest rideRequest = unbounded.take();
-
-				System.out.println("THE RIDE REUQEST " + rideRequest.getDestination());
-				System.out.println("THE RIDE REUQEST " + rideRequest.getRiders());
-				System.out.println("THE RIDE REUQEST " + rideRequest.getCity());
-				System.out.println("THE RIDE REUQEST " + rideRequest.getUserid());
-
-				AvroRideRequest avroRideRequest = AvroRideRequest.newBuilder()
-						.setRequestId(UUID.randomUUID().toString())
-						.setDestination(rideRequest.getDestination())
-						.setUserId(rideRequest.getUserid())
-						.setRiders(rideRequest.getRiders())
-						.build();
-				return avroRideRequest;
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-				return null;
-			}
-
-
-		};
-	}
+//
+//	@Bean
+//	public Supplier<Flux<Message<AvroRideRequest>>> orders_supplier(){
+//
+//	}
+//
+//	@Bean
+//	public Supplier<AvroRideRequest> orders_supplier() {
+//		return () -> {
+//			try {
+//				IntegrationReactiveUtils.messageChannelToFlux()
+//				RideRequest rideRequest = unbounded.take();
+//
+//				System.out.println("THE RIDE REUQEST " + rideRequest.getDestination());
+//				System.out.println("THE RIDE REUQEST " + rideRequest.getRiders());
+//				System.out.println("THE RIDE REUQEST " + rideRequest.getCity());
+//				System.out.println("THE RIDE REUQEST " + rideRequest.getUserid());
+//
+//				AvroRideRequest avroRideRequest = AvroRideRequest.newBuilder()
+//						.setRequestId(UUID.randomUUID().toString())
+//						.setDestination(rideRequest.getDestination())
+//						.setUserId(rideRequest.getUserid())
+//						.setRiders(rideRequest.getRiders())
+//						.build();
+//				return avroRideRequest;
+//			} catch (InterruptedException e) {
+//
+//				e.printStackTrace();
+//				return null;
+//			}
+//
+//
+//		};
+//	}
 
 	@Configuration
 	static class ConfluentSchemaRegistryConfiguration {

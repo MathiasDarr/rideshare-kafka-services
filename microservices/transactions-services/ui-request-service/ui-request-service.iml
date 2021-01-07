@@ -101,5 +101,6 @@
     <orderEntry type="library" name="Maven: io.netty:netty:3.10.6.Final" level="project" />
     <orderEntry type="library" name="Maven: com.101tec:zkclient:0.10" level="project" />
     <orderEntry type="library" name="Maven: io.confluent:kafka-schema-registry-client:5.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-core:5.3.0.RELEASE" level="project" />
   </component>
 </module>
