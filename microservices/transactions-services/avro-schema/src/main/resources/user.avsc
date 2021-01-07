@@ -1,11 +1,23 @@
 [
+
+{"namespace": "org.mddarr.rides.event.dto",
+ "type": "enum",
+ "name": "AvroUserEventType",
+ "symbols" : ["REGISTRAIION_PENDING", "REISTERED","REGISTRATION_FAILED"]
+},
+
+
 {"namespace" : "org.mddarr.rides.event.dto",
  "type": "record",
- "name": "AvroUser",
+ "name": "AvroUserEvent",
  "fields": [
-     {"name": "userid", "type": "string"},
+     {"name": "userid", "type": ["null", "string"]},
      {"name": "firstname",  "type": "string"},
-     {"name": "lastname",  "type": "string"}
+     {"name": "lastname",  "type": "string"},
+     {"name": "phonenumber",  "type": "string"},
+     {"name": "city",  "type": "string"},
+     {"name": "email",  "type": "string"},
+     {"name": "type",  "type": "AvroUserEventType"}
  ]
 }
 

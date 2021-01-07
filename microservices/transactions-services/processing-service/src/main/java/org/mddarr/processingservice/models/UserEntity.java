@@ -1,5 +1,8 @@
-package org.mddarr.processingservice;
+package org.mddarr.processingservice.models;
 
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,28 +10,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name ="providers")
+@Table(name ="userentities")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
     @Id
-    private String provider_id;
-
+    private String userid;
     @Column
     private String first_name;
     @Column
     private String last_name;
-    @Column
-    private String title;
-    @Column
-    private String department;
 
-    public String getProvider_id() {
-        return provider_id;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setProvider_id(String provider_id) {
-        this.provider_id = provider_id;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getFirst_name() {
@@ -45,21 +43,5 @@ public class UserEntity {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 }

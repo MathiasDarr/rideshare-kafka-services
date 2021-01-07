@@ -22,6 +22,3 @@ spring.cloud.stream.kafka.streams.binder.configuration:
   default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
   default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 
-
-
-
