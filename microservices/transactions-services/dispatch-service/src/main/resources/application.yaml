@@ -1,27 +1,14 @@
 server.port: 8090
 
 spring.cloud.stream:
-#  function:
-#    definition: process
-#    bindings:
-#      process-in-0:
-#        destination: ride-requests
-#      process-out-0:
-#        destination: requests-out
+
   function:
     definition: process_ride_requests;
-
-
 
 spring.cloud.stream.bindings.process_ride_requests-in-0:
   destination: ride-requests
 spring.cloud.stream.bindings.process_ride_requests-out-0:
   destination: rides
-
-#spring.cloud.stream.bindings.process_drivers-in-0:
-#  destination: drivers
-#spring.cloud.stream.bindings.process_drivers-out-0:
-#  destination: drivers-out
 
 
 
@@ -31,18 +18,10 @@ spring.cloud.stream.kafka.streams.binder:
     schema.registry.url: http://localhost:8081
     commit.interval.ms: 1000
 
-
 spring.cloud.stream.kafka.streams.binder.configuration:
   default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
   default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 
 
-#  kafka:
-#    streams:
-#      binder:
-#        applicationId: hello-word-count-sample
-#        configuration:
-#          commit.interval.ms: 100
-#          default:
-#            key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-#            value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+
+

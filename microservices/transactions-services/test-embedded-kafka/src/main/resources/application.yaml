@@ -1,4 +1,0 @@
-# Binding properties
-spring.cloud.stream.bindings.handle-out-0.destination=testEmbeddedOut
-spring.cloud.stream.bindings.handle-in-0.destination=testEmbeddedIn
-spring.cloud.stream.bindings.handle-in-0.group=embeddedKafkaApplication

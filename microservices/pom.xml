@@ -21,6 +21,12 @@
 	<modules>
 		<module>transactions-services</module>
 
+<!--		<module>rides-services</module>-->
+
+
+		<!--		<module>transactions-services</module>-->
+<!--		<module>paritioning-services</module>-->
+
 
 		<!--		<module>driver-service</module>-->
 <!--		<module>transaction-kafka-samples/function-composition</module>-->

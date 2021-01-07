@@ -22,6 +22,7 @@ public class RideDispatchApplication {
 	public static final String OUTPUT_TOPIC = "output";
 	public static final int WINDOW_SIZE_MS = 30_000;
 
+
 	@Bean
 	public Function<KStream<String, AvroRideRequest>, KStream<String, AvroRide>>  process_ride_requests() {
 		return (rideRequestKStream -> {
@@ -31,16 +32,6 @@ public class RideDispatchApplication {
 		});
 
 	}
-
-//	@Bean
-//	public Function<KStream<String, AvroDriver>, KStream<String, AvroDriver>>  process_drivers() {
-//		return (avroDriverKStream) -> {
-//			avroDriverKStream.foreach((key, value) -> System.out.println("THE KEY IS AND THE VLAUE IS " + key + " " + value));
-//			return avroDriverKStream;
-//
-//		};
-//	}
-
 
 
 }

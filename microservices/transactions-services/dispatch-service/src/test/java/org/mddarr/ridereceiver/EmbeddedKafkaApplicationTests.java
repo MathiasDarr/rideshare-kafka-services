@@ -1,17 +1,24 @@
 package org.mddarr.ridereceiver;
 
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
@@ -21,6 +28,7 @@ import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -35,6 +43,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EmbeddedKafkaApplicationTests {
 
     private static final String INPUT_TOPIC = "testEmbeddedIn";
+    private static final String OUTPUT_TOPIC = "testEmbeddedOut";
+    private static final String GROUP_NAME = "embeddedKafkaApplication";
 
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
@@ -72,5 +82,6 @@ public class EmbeddedKafkaApplicationTests {
         assertThat(singleRecord.key()).isEqualTo("my-aggregate-id");
         assertThat(singleRecord.value()).isEqualTo("{\"event\":\"Test Event\"}");
     }
+
 
 }

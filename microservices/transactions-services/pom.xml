@@ -14,9 +14,26 @@
 
     <modules>
         <module>avro-schema</module>
-        <module>ui-request-service</module>
-        <module>test-embedded-kafka</module>
-        <module>dispatch-service</module>
+        <module>ride-request-service</module>
+
+
+
+<!--        <module>ui-request-service</module>-->
+<!--        <module>dispatch-service</module>-->
+<!--        <module>transaction-spring-data-processor</module>-->
+<!--        <module>transaction-spring-data-processor</module>-->
     </modules>
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+        <repository>
+            <id>spring-repo</id>
+            <url>https://repo.spring.io/plugins-release/</url>
+        </repository>
+    </repositories>
+
 
 </project>

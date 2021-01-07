@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        process-in-0:
+          destination: person-command
+          consumer:
+            maxAttempts: 1
+        process-out-0:
+          destination: person-event
+
+      kafka:
+        binder:
+          transaction:
+            transaction-id-prefix: person-
+            producer:
+              configuration:
+                retries: 1
+                acks: all
+
+
+server.port: 9998
