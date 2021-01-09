@@ -6,25 +6,43 @@ import psycopg2
 import csv
 
 
-def create_users_table():
+
+def create_users_schema():
+
+    created_schema_statement = """CREATE SCHEMA IF NOT EXISTS users;"""
     create_users_table = """
-            CREATE TABLE users (
+            SET search_path TO users;
+            CREATE TABLE IF NOT EXISTS users (
                     userid VARCHAR(50) PRIMARY KEY,
                     first_name VARCHAR(50),
                     last_name VARCHAR(50),
                     city VARCHAR(50),
                     phone_number VARCHAR(50),
                     email VARCHAR(50) UNIQUE,
-                    password VARCHAR(50)
+                    update_ts timestamp
             );
     """
+
+    create_users_payment_information_table ="""
+            SET search_path TO users;
+            CREATE TABLE IF NOT EXISTS users.payments(
+                    userid VARCHAR(50) REFERENCES users.users(userid),
+                    update_ts timestamp NOT NULL,
+                    creditcard VARCHAR(50)
+            );
+    """
+
+    cur.execute(created_schema_statement)
+    conn.commit()
     cur.execute(create_users_table)
+    cur.execute(create_users_payment_information_table)
+
     conn.commit()
 
 
 def populate_users_table():
     USERS_CSV_FILE = 'data/users/users.csv'
-    insert_into_users_table = """INSERT INTO users(userid, first_name, last_name, email, password, phone_number, city) VALUES(%s,%s,%s, %s, %s, %s, %s);"""
+    insert_into_users_table = """INSERT INTO users(userid, first_name, last_name, email, phone_number, city, update_ts) VALUES(%s,%s,%s, %s, %s, %s, %s, %s, current_timestamp() );"""
     with open(USERS_CSV_FILE, newline='') as csvfile:
 
         reader = csv.DictReader(csvfile)
@@ -40,6 +58,48 @@ def populate_users_table():
         except Exception as e:
             print(e)
             conn.commit()
+
+
+# def populate_users_table():
+#     USERS_CSV_FILE = 'data/users/users.csv'
+#     insert_into_users_table = """INSERT INTO users(userid, update_ts) VALUES(%s,current_timestamp());"""
+#     with open(USERS_CSV_FILE, newline='') as csvfile:
+#         reader = csv.DictReader(csvfile)
+#         i = 0
+#         try:
+#             for row in reader:
+#                 i += 1
+#                 cur.execute(insert_into_users_table, [row['userid'], ])
+#             conn.commit()
+#         except Exception as e:
+#             print(e)
+#             conn.commit()
+
+
+# def create_users_table():
+#
+#     cur.execute(create_users_table)
+#     conn.commit()
+#
+#
+# def populate_users_table():
+#     USERS_CSV_FILE = 'data/users/users.csv'
+#     insert_into_users_table = """INSERT INTO users(userid, first_name, last_name, email, password, phone_number, city) VALUES(%s,%s,%s, %s, %s, %s, %s);"""
+#     with open(USERS_CSV_FILE, newline='') as csvfile:
+#
+#         reader = csv.DictReader(csvfile)
+#         i = 0
+#         try:
+#             for row in reader:
+#                 i += 1
+#                 cur.execute(insert_into_users_table,
+#                             [row['userid'], row['first_name'], row["last_name"], row['email'], row['password'],
+#                              row['phone_number'], row['city']])
+#
+#             conn.commit()
+#         except Exception as e:
+#             print(e)
+#             conn.commit()
 
 
 def populate_drivers_table():
@@ -153,7 +213,8 @@ if __name__ =='__main__':
     conn = psycopg2.connect(host="localhost", port="5432", user="postgres", password="postgres", database="postgresdb")
     cur = conn.cursor()
 
-    create_users_table()
+    create_users_schema()
+
 
     # populate_drivers_table()
     # populate_users_table()
