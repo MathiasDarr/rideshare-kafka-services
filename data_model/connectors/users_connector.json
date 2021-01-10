@@ -2,7 +2,6 @@
   "name": "users-connector",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
-    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
     "connection.url": "jdbc:postgresql://postgres:5432/postgresdb",
     "connection.user": "postgres",
     "connection.password": "postgres",

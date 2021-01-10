@@ -1,0 +1,38 @@
+[
+
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroUser",
+ "fields": [
+     {"name": "userid", "type": ["null", "string"]},
+     {"name": "firstname",  "type": "string"},
+     {"name": "lastname",  "type": "string"},
+     {"name": "phonenumber",  "type": "string"},
+     {"name": "city",  "type": "string"},
+     {"name": "email",  "type": "string"},
+        {"name": "update_ts","type": "int", "logicalType": "time-millis"
+     }
+ ]
+},
+
+{"namespace": "org.mddarr.rides.event.dto",
+ "type": "enum",
+ "name": "AvroUserEventType",
+ "symbols" : ["REGISTRAIION_PENDING", "REISTERED","REGISTRATION_FAILED"]
+},
+
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroUserEvent",
+ "fields": [
+     {"name": "userid", "type": ["null", "string"]},
+     {"name": "firstname",  "type": "string"},
+     {"name": "lastname",  "type": "string"},
+     {"name": "phonenumber",  "type": "string"},
+     {"name": "city",  "type": "string"},
+     {"name": "email",  "type": "string"},
+     {"name": "type",  "type": "AvroUserEventType"}
+ ]
+}
+
+]

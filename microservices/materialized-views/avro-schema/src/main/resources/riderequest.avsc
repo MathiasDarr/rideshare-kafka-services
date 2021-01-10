@@ -1,0 +1,23 @@
+
+[
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroRideRequest",
+ "fields": [
+     {"name": "request_id", "type": "string"},
+     {"name": "user_id", "type": "string"},
+     {"name": "riders",  "type": "int"},
+     {"name": "destination",  "type": "string"}
+ ]
+},
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroRide",
+ "fields": [
+     {"name": "rideid", "type": "string"},
+     {"name": "userid",  "type": "string"},
+     {"name": "driverid",  "type": "string"}
+ ]
+}
+
+]
