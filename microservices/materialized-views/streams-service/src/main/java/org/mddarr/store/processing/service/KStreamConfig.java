@@ -1,0 +1,92 @@
+package org.mddarr.store.processing.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.state.Stores;
+import org.mddarr.store.processing.service.domain.Funds;
+import org.mddarr.store.processing.service.domain.Transaction;
+import org.mddarr.store.processing.service.domain.TransactionResult;
+import org.mddarr.store.processing.service.topic.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
+import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.support.serializer.JsonSerde;
+
+@Configuration
+@EnableKafkaStreams
+@Slf4j
+@RequiredArgsConstructor
+public class KStreamConfig {
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().findAndRegisterModules();
+
+  private final TransactionRequestTopicConfig transactionRequestConfiguration;
+  private final TransactionSuccessTopicConfig transactionSuccessConfiguration;
+  private final TransactionFailedTopicConfig transactionFailedConfiguration;
+  private final FundsStoreConfig fundsStoreConfig;
+
+  @Bean
+  NewTopic transactionFailed(TransactionFailedTopicConfig topicConfig) {
+    return createTopic(topicConfig);
+  }
+
+  @Bean
+  NewTopic transactionSuccess(TransactionSuccessTopicConfig topicConfig) {
+    return createTopic(topicConfig);
+  }
+
+  private NewTopic createTopic(TopicConfig topicConfig) {
+    log.info("Creating topic {}...", topicConfig.getName());
+    return TopicBuilder.name(topicConfig.getName())
+        .partitions(topicConfig.getPartitions())
+        .replicas(topicConfig.getReplicationFactor())
+        .compact()
+        .build();
+  }
+
+  @Bean
+  public Topology topology(StreamsBuilder streamsBuilder) {
+    streamsBuilder.addStateStore(
+        Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore(fundsStoreConfig.getName()),
+                                    Serdes.String(), new JsonSerde<>(Funds.class, OBJECT_MAPPER)));
+
+    defineStreams(streamsBuilder);
+
+    Topology topology = streamsBuilder.build();
+
+    log.trace("Topology description : {}", topology.describe());
+
+    return topology;
+  }
+
+  protected void defineStreams(StreamsBuilder streamsBuilder) {
+
+    KStream<String, Transaction> transactionStream =
+        streamsBuilder.stream(transactionRequestConfiguration.getName());
+
+    final String storeName = fundsStoreConfig.getName();
+    KStream<String, TransactionResult> resultStream = transactionStream
+        .transformValues(() -> new TransactionTransformer(storeName), storeName);
+
+    resultStream
+        .filter(this::success)
+        .to(transactionSuccessConfiguration.getName());
+
+    resultStream
+        .filterNot(this::success)
+        .to(transactionFailedConfiguration.getName());
+  }
+
+  private boolean success(String account, TransactionResult result) {
+    return result.isSuccess();
+  }
+
+
+}

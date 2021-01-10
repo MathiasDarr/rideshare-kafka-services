@@ -14,7 +14,8 @@
 
     <modules>
         <module>avro-schema </module>
-        <module>users-service</module>
+        <module>streams-service</module>
+<!--        <module>users-service</module>-->
 <!--        <module> break-service </module>-->
     </modules>
 

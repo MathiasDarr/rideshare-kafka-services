@@ -29,3 +29,10 @@ This directory contains data generating & data seeding scripts
     - generates random names for 200,000 users & 15,000 drivers
 * seed_postgres_data.py
     - insert the randomly generated data to postgres
+    
+    
+kafka-avro-console-consumer --from-beginning --topic users.users \
+  --bootstrap-server localhost:9092 \
+  --property print.key=true \
+  --property schema.registry.url=http://localhost:8081
+    
