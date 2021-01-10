@@ -9,8 +9,7 @@ import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 
-
-import org.mddarr.rides.event.dto.AvroUser;
+import avro.AvroUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -27,11 +26,11 @@ public class ProcessingServiceApplication {
 	}
 
 	@Bean
-	public Consumer<KStream<String, AvroUser>> process_purchase_events() {
+	public Consumer<KStream<String, AvroUser>> process_users() {
 		return (userKStream -> {
 
 			userKStream.foreach((k,v)->{
-				System.out.println("THE PROUDCT IS " + v.getFirstname() + " and the key is " + k);
+				System.out.println("THE PROUDCT IS " + v.getFirstName());
 			});
 
 //			final Map<String, String> serdeConfig = Collections.singletonMap(

@@ -1,17 +1,15 @@
 [
 
-{"namespace" : "org.mddarr.rides.event.dto",
+{"namespace" : "avro",
  "type": "record",
  "name": "AvroUser",
  "fields": [
      {"name": "userid", "type": ["null", "string"]},
-     {"name": "firstname",  "type": "string"},
-     {"name": "lastname",  "type": "string"},
-     {"name": "phonenumber",  "type": "string"},
-     {"name": "city",  "type": "string"},
+     {"name": "first_name",  "type": "string"},
+     {"name": "last_name",  "type": "string"},
      {"name": "email",  "type": "string"},
-        {"name": "update_ts","type": "int", "logicalType": "time-millis"
-     }
+     {"name": "update_ts","type": "long"
+   }
  ]
 },
 

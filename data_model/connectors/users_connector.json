@@ -8,6 +8,8 @@
     "table.whitelist" : "users.users",
     "topic.prefix": "users.",
     "mode":"timestamp",
-    "timestamp.column.name": "update_ts"
- }
+    "timestamp.column.name": "update_ts",
+    "transforms": "AddNamespace", "transforms.AddNamespace.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+    "transforms.AddNamespace.schema.name": "avro.AvroUser"
+  }
 }

@@ -17,3 +17,11 @@ This directory contains Microservices developed using Spring Boot, Kafka Streams
 
 
 ## Running the Services ##
+
+
+
+
+kafka-avro-console-consumer --from-beginning --topic users.users \
+  --bootstrap-server localhost:9092 \
+  --property print.key=true \
+  --property schema.registry.url=http://localhost:8081

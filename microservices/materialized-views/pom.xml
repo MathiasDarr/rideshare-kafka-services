@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module> avro-schema </module>
+        <module>avro-schema </module>
         <module>users-service</module>
 <!--        <module> break-service </module>-->
     </modules>

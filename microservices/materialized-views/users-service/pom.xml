@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>org.mddarr</groupId>
-	<artifactId>break-service</artifactId>
+	<artifactId>users-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>break-service</name>
+	<name>users-service</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
