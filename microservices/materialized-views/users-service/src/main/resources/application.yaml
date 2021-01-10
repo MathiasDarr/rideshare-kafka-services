@@ -30,7 +30,7 @@ spring:
       minimumIdle: 5
       maximumPoolSize: 20
       poolName: SpringBootJPAHikariCP
-      schema: users
+#      schema: users
 
 
   jpa:

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="users")
+@Table(name="users",schema = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
