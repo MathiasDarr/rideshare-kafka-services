@@ -17,6 +17,9 @@ def create_users_table():
             SET search_path TO users;
             CREATE TABLE IF NOT EXISTS users.users(
                     userid VARCHAR(50) PRIMARY KEY,
+                    first_name VARCHAR NOT NULL,
+                    last_name VARCHAR NOT NULL,
+                    email VARCHAR NOT NULL,
                     UPDATE_TS timestamp NOT NULL
             );
     """
@@ -35,7 +38,7 @@ def create_users_table():
 def populate_users_table():
     insert_into_users_table = """
     SET search_path TO users;
-    INSERT INTO users.users(userid, UPDATE_TS) VALUES(%s, current_timestamp);"""
+    INSERT INTO users.users(userid, first_name, last_name, email,UPDATE_TS) VALUES(%s,%s,%s,%s, current_timestamp);"""
 
     USERS_CSV_FILE = 'data/users/users.csv'
 
@@ -46,9 +49,9 @@ def populate_users_table():
         try:
             for row in reader:
                 i += 1
-                cur.execute(insert_into_users_table, [row['userid']])
+                cur.execute(insert_into_users_table, [row['userid'], row['first_name'], row['last_name'], row['email']])
                 if i == 10:
-                    return
+                    break
             conn.commit()
         except Exception as e:
             print(e)
