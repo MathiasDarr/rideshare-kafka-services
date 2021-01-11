@@ -4,13 +4,10 @@ This repository contains microservices implemented using Spring, frontend develo
 * Front end developed using Vue JS
 * Python scripts for seeding postgres & cassandra databases
 
+<img src ="https://dakobed-images.s3-us-west-2.amazonaws.com/architecture_diagram.png" width ="1200" height="800">
 
 ## This repository contains ##
 * [Data Model](data_model/README.md)
-
-
-
-
 
 * Spring MicroServices
 
@@ -37,12 +34,12 @@ This repository contains microservices implemented using Spring, frontend develo
 * Python data seeding scripts
     * interact with Cassandra using datastax cassandra-driver
     * interact with postgresql using psycopg2
-    
-   
-## Replication Steps  ##
+
+## Reproduction Steps  ##
 #### Seed database ####
-* Run cassandra, postgres, kafka, zookeeper, schema registry & connect
-    docker-compose up 
+* Run cassandra, postgres, kafka, zookeeper, schema registry & connect    
+    * cd microservices
+    * docker-compose -f confluent_compose.yaml up
 * populate cassandra & postgres databases ()
     * cd data_model
     * Install psycopg2 & cassandra-driver
@@ -62,4 +59,8 @@ This repository contains microservices implemented using Spring, frontend develo
     * java -jar driver-dispatch-service/target/driver-dispatch-service-0.0.1-SNAPSHOT.jar
 * run location tracker
    java -jar 
+
+
+### Install the JDBC connector ###
+
 
