@@ -1,15 +1,13 @@
-package org.mddarr.store.processing.service.services;
+package org.mddarr.users.service.services;
 
-import lombok.RequiredArgsConstructor;
-import org.mddarr.store.processing.service.models.User;
-import org.mddarr.store.processing.service.models.requests.PostUserRequest;
-import org.mddarr.store.processing.service.repositories.UserRepository;
+import org.mddarr.users.service.models.User;
+import org.mddarr.users.service.models.requests.PostUserRequest;
+import org.mddarr.users.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

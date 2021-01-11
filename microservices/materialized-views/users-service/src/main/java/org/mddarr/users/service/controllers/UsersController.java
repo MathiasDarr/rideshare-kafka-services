@@ -1,10 +1,9 @@
-package org.mddarr.store.processing.service.controllers;
+package org.mddarr.users.service.controllers;
 
 
-import lombok.RequiredArgsConstructor;
-import org.mddarr.store.processing.service.models.User;
-import org.mddarr.store.processing.service.models.requests.PostUserRequest;
-import org.mddarr.store.processing.service.services.UserService;
+import org.mddarr.users.service.models.User;
+import org.mddarr.users.service.models.requests.PostUserRequest;
+import org.mddarr.users.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;

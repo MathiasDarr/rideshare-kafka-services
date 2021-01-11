@@ -1,4 +1,4 @@
-package org.mddarr.store.processing.service.models.requests;
+package org.mddarr.users.service.models.requests;
 
 
 import lombok.AllArgsConstructor;

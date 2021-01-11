@@ -1,6 +1,6 @@
-package org.mddarr.store.processing.service.repositories;
+package org.mddarr.users.service.repositories;
 
-import org.mddarr.store.processing.service.models.User;
+import org.mddarr.users.service.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
