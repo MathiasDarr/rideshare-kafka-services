@@ -1,0 +1,26 @@
+user:
+  - userid: "dfd"
+    first_name: "realpestano"
+    last_name: "realpestano"
+    email: "addf@gmail.com"
+    @Column
+    private String password;
+
+
+    @Id
+    private String userid;
+
+    @Column
+    private String first_name;
+
+    @Column
+    private String last_name;
+
+    @Column
+    private String email;
+
+    @Column
+    private String password;
+
+    @Column
+    private Date update_ts;

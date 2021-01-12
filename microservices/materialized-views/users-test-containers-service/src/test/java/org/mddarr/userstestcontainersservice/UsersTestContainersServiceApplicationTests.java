@@ -28,7 +28,6 @@ class UsersTestContainersServiceApplicationTests {
 		registry.add("spring.datasource.username", container::getUsername);
 	}
 
-
 	@Test
 	void contextLoads() {
 	}

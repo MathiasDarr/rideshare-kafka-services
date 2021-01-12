@@ -1,0 +1,25 @@
+server.port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgresdb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 30000
+      maxLifetime: 1800000
+      minimumIdle: 5
+      maximumPoolSize: 20
+      poolName: SpringBootJPAHikariCP
+  #      schema: users
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: users
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+

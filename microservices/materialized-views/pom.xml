@@ -14,8 +14,11 @@
 
     <modules>
         <module>avro-schema </module>
-<!--        <module>streams-service</module>-->
-        <module>users-service</module>
+        <module>containers-testing-service</module>
+
+        <!--        <module>streams-service</module>-->
+<!--        <module>users-service</module>-->
+
 <!--        <module> break-service </module>-->
     </modules>
 
