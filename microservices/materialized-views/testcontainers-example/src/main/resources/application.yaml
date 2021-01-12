@@ -1,4 +1,6 @@
-server.port: 8080
+server.port: 8055
+spring.jpa.show-sql: true
+
 
 spring:
   datasource:
@@ -15,11 +17,11 @@ spring:
       poolName: SpringBootJPAHikariCP
   #      schema: users
 
+
   jpa:
     properties:
       hibernate:
         default_schema: users
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop-update
-
+      ddl-auto: create

@@ -15,7 +15,7 @@
     <modules>
         <module>avro-schema </module>
         <module>containers-testing-service</module>
-
+<!--        <module>testcontainers-example</module>-->
         <!--        <module>streams-service</module>-->
 <!--        <module>users-service</module>-->
 
