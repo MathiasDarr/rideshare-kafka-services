@@ -1,10 +1,10 @@
-package org.mddarr.containerstestingservice;
+package org.mddarr.containerstestingservice.repositories;
 
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mddarr.containerstestingservice.model.Book;
-import org.mddarr.containerstestingservice.repository.BookRepository;
+import org.mddarr.containerstestingservice.models.UserEntity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
@@ -15,16 +15,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ContextConfiguration(initializers = { BookRepositoryTCIntegrationTest.Initializer.class})
-public class BookRepositoryTCIntegrationTest {
+@ContextConfiguration(initializers = { UserEntityRepositoryIntegrationTest.Initializer.class})
+public class UserEntityRepositoryIntegrationTest {
 
     @Autowired
-    private BookRepository bookRepository;
+    private UserRepository userRepository;
 
     @ClassRule
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:11-alpine")
@@ -46,17 +48,22 @@ public class BookRepositoryTCIntegrationTest {
     }
 
     @Test
-    public void save_and_read_book(){
-        Book book = new Book();
-        book.setTitle("My fancy title");
+    public void test_save_user(){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserid(UUID.randomUUID().toString());
+        userEntity.setFirst_name("Charles");
+        userEntity.setLast_name("Goodwin");
+        userEntity.setEmail("cgoodwin@gmail.com");
 
-        bookRepository.save(book);
+        userRepository.save(userEntity);
 
-        List<Book> allBooks = bookRepository.findAll();
+        List<UserEntity> allBooks = userRepository.findAll();
 
         assertThat(allBooks).isNotEmpty();
         assertThat(allBooks).hasSize(1);
-        assertThat(allBooks.get(0).getTitle()).isEqualTo("My fancy title");
+        assertThat(allBooks.get(0).getFirst_name()).isEqualTo("Charles");
     }
+
+
 
 }
